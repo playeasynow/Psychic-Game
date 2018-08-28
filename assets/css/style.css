@@ -1,12 +1,22 @@
+body {
+    background-image: url("../images/beachhouse.gif");
+}
+
 h1 {
     font-size: 36px;
     font-weight: bold;
-    margin-left: 20px;
-    margin-top: 20px;
+    color: white;
 }
 
 p {
-    margin-left: 20px;
     margin-top: 10px;
     margin-bottom: 10px;
+    color: white;
+}
+
+.mainGame {
+    padding: 20px;
+    background-color: gray;
+    opacity: 0.8;
+    color: white;
 }
