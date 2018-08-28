@@ -1,57 +1,95 @@
-// Creates an array that lists out all of the options (Rock, Paper, or Scissors).
-var computerChoices = ["r", "p", "s"];
+// an array that lists out all letters of the alphabet
+var alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
+    "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
-// Creating variables to hold the number of wins, losses, and ties. They start at 0.
+// Creating variables to hold the number of wins, losses, and guesses left
 var wins = 0;
 var losses = 0;
-var ties = 0;
+var guessesLeft = 10;
+var lettersGuessed = [];
+var challengeLetter = null;
 
-// Create variables that hold references to the places in the HTML where we want to display things.
-var directionsText = document.getElementById("directions-text");
-var userChoiceText = document.getElementById("userchoice-text");
-var computerChoiceText = document.getElementById("computerchoice-text");
-var winsText = document.getElementById("wins-text");
-var lossesText = document.getElementById("losses-text");
-var tiesText = document.getElementById("ties-text");
+// variables that hold references to the places in the HTML
+// var winsText = document.getElementById("wins-text");
+// var lossesText = document.getElementById("losses-text");
+// var guessesLeftText = document.getElementById("guesses-left");
 
-// This function is run whenever the user presses a key.
-document.onkeyup = function(event) {
+// computer chooses random letter
+var computerGuess = alphabet[Math.floor(Math.random() * alphabet.length)];
 
-  // Determines which key was pressed.
-  var userGuess = event.key;
+function updateGuessesLeft() {
+    // guessesLeft will get displayed in HTML
+    document.querySelector('#guesses-left').innerHTML = "Guesses left: " + guessesLeft;
+};
 
-  // Randomly chooses a choice from the options array. This is the Computer's guess.
-  var computerGuess = computerChoices[Math.floor(Math.random() * computerChoices.length)];
+function updateLetterToGuess() {
+    this.challengeLetter = this.alphabet[Math.floor(Math.random() * this.alphabet.length)];
+};
 
-  // Reworked our code from last step to use "else if" instead of lots of if statements.
+function updateGuessesSoFar() {
+    // Here we take the guesses the user has tried -- then display it as letters separated by commas. 
+    document.querySelector('#letters-guessed').innerHTML = "Your Guesses so far: " + lettersGuessed.join(', ');
+};
 
-  // This logic determines the outcome of the game (win/loss/tie), and increments the appropriate number
-  if ((userGuess === "r") || (userGuess === "p") || (userGuess === "s")) {
+function updateWins() {
+    // wins-text will get displayed in HTML
+    document.querySelector('#wins-text').innerHTML = "Wins: " + wins;
+};
 
-    if ((userGuess === "r") && (computerGuess === "s")) {
-      wins++;
-    } else if ((userGuess === "r") && (computerGuess === "p")) {
-      losses++;
-    } else if ((userGuess === "s") && (computerGuess === "r")) {
-      losses++;
-    } else if ((userGuess === "s") && (computerGuess === "p")) {
-      wins++;
-    } else if ((userGuess === "p") && (computerGuess === "r")) {
-      wins++;
-    } else if ((userGuess === "p") && (computerGuess === "s")) {
-      losses++;
-    } else if (userGuess === computerGuess) {
-      ties++;
+function updateLosses() {
+    // losses-text will get displayed in HTML
+    document.querySelector('#losses-text').innerHTML = "Losses: " + losses;
+};
+
+function reset() {
+    guessesLeft = 10;
+    guessedLetters = [];
+
+    updateLetterToGuess();
+    updateGuessesLeft();
+    updateGuessesSoFar();
+}
+
+//When key is pressed/released it becomes the users guess
+document.onkeyup = function (event) {
+    var userGuess = String.fromCharCode(event.keyCode).toLowerCase();
+    var check = alphabet.includes(userGuess);
+    // display wins and losses throughout the game
+    updateWins();
+    updateLosses();
+
+    if (check === false) {
+        alert("Make sure to use only letters!");
+        return false;
+    } else if (check === true) {
+        //If the user's choice was in the alphabet then update guesses left and add users guess to the array of guessed letters
+        guessesLeft--;
+        lettersGuessed.push(userGuess);
+        // update the scoreboard
+        updateGuessesLeft();
+        updateGuessesSoFar();
+
+        if (guessesLeft > 0) {
+            // if the user's guess is the randomly chosen letter, win
+            if (userGuess === challengeLetter) {
+                wins++;
+                document.querySelector('#wins-text').innerHTML = "Wins: " + wins;
+                userGuess = userGuess.toUpperCase();
+                alert("Yes, you are psychic! The chosen letter was " + userGuess);
+                //  call to reset the guesses left and the guesses so far i.e. restart the game
+                reset();
+            }
+        } else if (guessesLeft === 0) {
+            // Then we will loss and we'll update the html to display the loss 
+            losses++;
+            document.querySelector('#losses-text').innerHTML = "Losses: " + losses;
+            alert("Sorry!! Not a psychic yet. Keep trying!");
+            //  call to reset the guesses left and the guesses so far i.e. restart the game
+            reset();
+        }
+        return false;
+    } else {
+        alert("this is weird.");
     }
 
-    // Hide the directions
-    directionsText.textContent = "";
-
-    // Display the user and computer guesses, and wins/losses/ties.
-    userChoiceText.textContent = "You chose: " + userGuess;
-    computerChoiceText.textContent = "The computer chose: " + computerGuess;
-    winsText.textContent = "wins: " + wins;
-    lossesText.textContent = "losses: " + losses;
-    tiesText.textContent = "ties: " + ties;
-  }
 };
