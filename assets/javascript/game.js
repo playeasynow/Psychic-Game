@@ -2,17 +2,12 @@
 var alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
     "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
-// Creating variables to hold the number of wins, losses, and guesses left
+// variables to hold the number of wins, losses, and guesses left
 var wins = 0;
 var losses = 0;
 var guessesLeft = 10;
 var lettersGuessed = [];
 var challengeLetter = null;
-
-// variables that hold references to the places in the HTML
-// var winsText = document.getElementById("wins-text");
-// var lossesText = document.getElementById("losses-text");
-// var guessesLeftText = document.getElementById("guesses-left");
 
 // computer chooses random letter
 var computerGuess = alphabet[Math.floor(Math.random() * alphabet.length)];
@@ -41,6 +36,11 @@ function updateLosses() {
     document.querySelector('#losses-text').innerHTML = "Losses: " + losses;
 };
 
+function hideInstructions() {
+    // hides instructions box
+    document.querySelector('#directions-text').innerHTML = "";
+};
+
 function reset() {
     guessesLeft = 10;
     guessedLetters = [];
@@ -57,6 +57,7 @@ document.onkeyup = function (event) {
     // display wins and losses throughout the game
     updateWins();
     updateLosses();
+    hideInstructions();
 
     if (check === false) {
         alert("Make sure to use only letters!");
